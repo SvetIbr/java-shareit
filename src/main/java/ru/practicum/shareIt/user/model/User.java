@@ -8,20 +8,32 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * TODO Sprint add-controllers.
+ * Класс пользователя со свойствами <b>id</b>, <b>name</b>, <b>email</b>
+ * для работы с базой данных
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
  */
 @Data
 @Builder
 public class User {
-
+    /**
+     * Поле идентификатор
+     */
     private Long id;
 
+    /**
+     * Поле имя
+     */
     @NotNull(message = "Не указано имя")
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank(message = "Не заполнено поле \"имя\"")
     private String name;
 
+    /**
+     * Поле электронная почта
+     */
     @Email(message = "Некорректный email")
-    @NotNull(message = "Email не должен равняться null")
-    @NotBlank(message = "Email не может быть пустым")
+    @NotNull(message = "Не указан email")
+    @NotBlank(message = "Не заполнено поле \"email\"")
     private String email;
 }

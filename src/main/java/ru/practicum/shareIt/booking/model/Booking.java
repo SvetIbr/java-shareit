@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareIt.booking.BookingStatus;
+import ru.practicum.shareIt.booking.status.BookingStatus;
 import ru.practicum.shareIt.item.model.Item;
 import ru.practicum.shareIt.user.model.User;
 

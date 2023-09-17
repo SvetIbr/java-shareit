@@ -26,26 +26,22 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     public ItemDto create(Long userId, ItemDto itemDto) {
-        User user = checkUserInStorage(userId);
+        User user = checkUserInUserStorage(userId);
         Item item = repository.create(ItemMapper.toItem(itemDto, user));
         return ItemMapper.toItemDto(item);
     }
 
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
         if (userId == null) {
-            throw new BadRequestException("Не хватает идентификатора пользователя");
+            throw new BadRequestException("Не указан идентификатор пользователя");
         }
         if (itemId == null) {
             throw new BadRequestException("Не хватает идентификатора вещи для обновления");
         }
 
-        checkUserInStorage(userId);
+        checkUserInUserStorage(userId);
 
-        Item itemToUpdate = repository.getById(itemId);
-        if (itemToUpdate == null) {
-            throw new ItemNotFoundException("Вещь с идентификатором "
-                    + itemId + " не найдена");
-        }
+        Item itemToUpdate = checkItemInStorage(itemId);
 
         if (!userId.equals(itemToUpdate.getOwner().getId())) {
             throw new NoAccessException("У пользователя нет прав для редактирования данной вещи");
@@ -60,23 +56,25 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto getById(Long userId, Long itemId) {
         if (userId == null) {
-            throw new BadRequestException("Не хватает идентификатора пользователя");
+            throw new BadRequestException("Не указан идентификатор пользователя");
         }
         if (itemId == null) {
-            throw new BadRequestException("Не хватает идентификатора вещи для обновления");
+            throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
         }
 
-        checkUserInStorage(userId);
+        checkUserInUserStorage(userId);
 
-        return ItemMapper.toItemDto(repository.getById(itemId));
+        Item item = checkItemInStorage(itemId);
+
+        return ItemMapper.toItemDto(item);
     }
 
     public List<ItemDto> findByOwner(Long userId) {
         if (userId == null) {
-            throw new BadRequestException("Не хватает идентификатора пользователя");
+            throw new BadRequestException("Не указан идентификатор владельца");
         }
 
-        checkUserInStorage(userId);
+        checkUserInUserStorage(userId);
 
         return repository.getByOwner(userId).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
@@ -88,11 +86,21 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
-    private User checkUserInStorage(Long userId) {
+    private User checkUserInUserStorage(Long userId) {
         User user = userRepository.getById(userId);
         if (user == null) {
-            throw new UserNotFoundException("Пользователь с идентификатором " + userId + " не найден");
+            throw new UserNotFoundException(String.format("Пользователь " +
+                    "с идентификатором %d не найден", userId));
         }
         return user;
+    }
+
+    private Item checkItemInStorage(Long itemId) {
+        Item item = repository.getById(itemId);
+        if (item == null) {
+            throw new ItemNotFoundException(String.format("Вещь " +
+                    "с идентификатором %d не найдена", itemId));
+        }
+        return item;
     }
 }
