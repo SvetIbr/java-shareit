@@ -53,11 +53,10 @@ public class ItemRepository {
      * Метод получения вещи по идентификатору
      *
      * @param itemId - идентификатор вещи
-     * @return копию объекта item с указанным идентификатором,
-     * в случае отсутствия вещи по идентификатору - null
+     * @return копию объекта item с указанным идентификатором
      */
     public Item getById(Long itemId) {
-        return items.getOrDefault(itemId, null);
+        return items.get(itemId);
     }
 
     /**
@@ -68,7 +67,7 @@ public class ItemRepository {
      */
     public List<Item> getByOwner(Long userId) {
         return items.values().stream()
-                .filter(item -> item.getOwner().getId().equals(userId))
+                .filter(item -> userId.equals(item.getOwner().getId()))
                 .collect(Collectors.toList());
     }
 

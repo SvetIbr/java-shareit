@@ -27,7 +27,7 @@ public class ItemController {
     /**
      * Поле образец заголовка запроса для указания  идентификатора пользователя
      */
-    private final String headerWithOwnerId = "X-Sharer-User-Id";
+    private static final String HEADER_WITH_OWNER_ID = "X-Sharer-User-Id";
 
     /**
      * Метод добавления вещи в хранилище сервиса через запрос
@@ -36,7 +36,7 @@ public class ItemController {
      * @return копию объекта itemDto с добавленным id и код ответа API 201
      */
     @PostMapping
-    public ItemDto create(@RequestHeader(headerWithOwnerId) long userId,
+    public ItemDto create(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
                           @Valid @RequestBody ItemDto itemDto) {
         return new ResponseEntity<>(service.create(userId, itemDto), HttpStatus.CREATED).getBody();
     }
@@ -50,7 +50,7 @@ public class ItemController {
      * @return копию объекта itemDto с обновленными полями
      */
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestHeader(headerWithOwnerId) long userId,
+    public ItemDto update(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
                           @RequestBody ItemDto itemDto,
                           @PathVariable Long itemId) {
         return service.update(userId, itemId, itemDto);
@@ -64,7 +64,8 @@ public class ItemController {
      * @return копию объекта itemDto с указанным идентификатором
      */
     @GetMapping("/{itemId}")
-    public ItemDto findById(@RequestHeader(headerWithOwnerId) long userId, @PathVariable Long itemId) {
+    public ItemDto findById(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+                            @PathVariable Long itemId) {
         return service.getById(userId, itemId);
     }
 
@@ -75,7 +76,7 @@ public class ItemController {
      * @return список объектов itemDto
      */
     @GetMapping
-    public List<ItemDto> findByOwner(@RequestHeader(headerWithOwnerId) long userId) {
+    public List<ItemDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
         return service.findByOwner(userId);
     }
 

@@ -55,11 +55,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto getById(Long userId, Long itemId) {
-        if (userId == null) {
-            throw new BadRequestException("Не указан идентификатор пользователя");
-        }
         if (itemId == null) {
-            throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
+            if (userId == null) {
+                throw new BadRequestException("Не указаны идентификаторы " +
+                        "пользователя и вещи для обновления информации");
+            } else {
+                throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
+            }
+        } else {
+            if (userId == null) {
+                throw new BadRequestException("Не указан идентификатор пользователя");
+            }
         }
 
         checkUserInUserStorage(userId);
