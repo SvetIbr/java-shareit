@@ -32,12 +32,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
-        if (userId == null) {
-            throw new BadRequestException("Не указан идентификатор пользователя");
-        }
-        if (itemId == null) {
-            throw new BadRequestException("Не хватает идентификатора вещи для обновления");
-        }
+        checkIdUserAndIdItemForNull(userId, itemId);
 
         checkUserInUserStorage(userId);
 
@@ -55,18 +50,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto getById(Long userId, Long itemId) {
-        if (itemId == null) {
-            if (userId == null) {
-                throw new BadRequestException("Не указаны идентификаторы " +
-                        "пользователя и вещи для обновления информации");
-            } else {
-                throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
-            }
-        } else {
-            if (userId == null) {
-                throw new BadRequestException("Не указан идентификатор пользователя");
-            }
-        }
+        checkIdUserAndIdItemForNull(userId, itemId);
 
         checkUserInUserStorage(userId);
 
@@ -108,5 +92,20 @@ public class ItemServiceImpl implements ItemService {
                     "с идентификатором %d не найдена", itemId));
         }
         return item;
+    }
+
+    private void checkIdUserAndIdItemForNull(Long userId, Long itemId) {
+        if (itemId == null) {
+            if (userId == null) {
+                throw new BadRequestException("Не указаны идентификаторы " +
+                        "пользователя и вещи для обновления информации");
+            } else {
+                throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
+            }
+        } else {
+            if (userId == null) {
+                throw new BadRequestException("Не указан идентификатор пользователя");
+            }
+        }
     }
 }
