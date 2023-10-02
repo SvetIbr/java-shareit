@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareIt.item.comment.dto.CommentDto;
+import ru.practicum.shareIt.item.comment.service.CommentService;
 import ru.practicum.shareIt.item.dto.ItemDto;
-import ru.practicum.shareIt.item.service.ItemServiceImpl;
+import ru.practicum.shareIt.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,11 +25,13 @@ public class ItemController {
     /**
      * Поле сервис для работы с хранилищем вещей
      */
-    private final ItemServiceImpl service;
+    private final ItemService service;
+
+    private final CommentService commentService;
     /**
      * Поле образец заголовка запроса для указания  идентификатора пользователя
      */
-    private static final String HEADER_WITH_OWNER_ID = "X-Sharer-User-Id";
+    public static final String HEADER_WITH_OWNER_ID = "X-Sharer-User-Id";
 
     /**
      * Метод добавления вещи в хранилище сервиса через запрос
@@ -77,7 +81,7 @@ public class ItemController {
      */
     @GetMapping
     public List<ItemDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
-        return service.findByOwner(userId);
+        return service.getByOwner(userId);
     }
 
     /**
@@ -88,8 +92,16 @@ public class ItemController {
      * @return список вещей, доступных для аренды и содержащх в описании или названии text
      */
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam(value = "text") String text) {
-        return service.search(text);
+    public List<ItemDto> search(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+                                @RequestParam(value = "text") String text) {
+        return service.search(userId, text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto comment(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+                              @PathVariable Long itemId,
+                              @Valid @RequestBody CommentDto commentDto) {
+        return commentService.addComment(userId, itemId, commentDto);
     }
 }
 

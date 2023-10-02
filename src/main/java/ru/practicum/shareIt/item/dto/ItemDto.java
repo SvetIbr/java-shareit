@@ -2,9 +2,13 @@ package ru.practicum.shareIt.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareIt.booking.dto.LastBookingDto;
+import ru.practicum.shareIt.booking.dto.NextBookingDto;
+import ru.practicum.shareIt.item.comment.dto.CommentDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Класс вещи со свойствами <b>id</b>, <b>name</b>, <b>description</b>,
@@ -40,5 +44,14 @@ public class ItemDto {
      */
     @NotNull(message = "Не указан статус доступности")
     private Boolean available;
+
+    private Long owner;
+
+    private Long request;
+
+    private LastBookingDto lastBooking;
+
+    private NextBookingDto nextBooking;
+    private List<CommentDto> comments;
 }
 
