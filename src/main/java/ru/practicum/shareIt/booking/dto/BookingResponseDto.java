@@ -3,23 +3,23 @@ package ru.practicum.shareIt.booking.dto;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareIt.booking.status.BookingStatus;
-import ru.practicum.shareIt.item.dto.ItemInfoDto;
-import ru.practicum.shareIt.user.dto.UserInfoDto;
+import ru.practicum.shareIt.item.dto.ItemShortDto;
+import ru.practicum.shareIt.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class BookingInfoDto {
+public class BookingResponseDto {
     private Long id;
 
     private LocalDateTime start;
 
     private LocalDateTime end;
 
-    private ItemInfoDto item;
+    private ItemShortDto item;
 
-    private UserInfoDto booker;
+    private UserShortDto booker;
 
     private BookingStatus status;
 }

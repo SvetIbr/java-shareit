@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareIt.booking.dto.BookingDto;
-import ru.practicum.shareIt.booking.dto.BookingInfoDto;
+import ru.practicum.shareIt.booking.dto.BookingRequestDto;
+import ru.practicum.shareIt.booking.dto.BookingResponseDto;
 import ru.practicum.shareIt.booking.dto.State;
 import ru.practicum.shareIt.booking.mapper.BookingMapper;
 import ru.practicum.shareIt.booking.model.Booking;
@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
     static final Sort SORT = Sort.by(Sort.Direction.DESC, "start");
 
     @Transactional
-    public BookingInfoDto create(long userId, BookingDto bookingDto) {
+    public BookingResponseDto create(long userId, BookingRequestDto bookingDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь " +
                         "с идентификатором %d не найден", userId)));
@@ -56,12 +56,12 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(user);
         booking.setStatus(BookingStatus.WAITING);
         booking = repository.save(booking);
-        return BookingMapper.toBookingInfoDto(booking);
+        return BookingMapper.toBookingResponseDto(booking);
     }
 
     //Подтверждение или отклонение запроса на бронирование. Может быть выполнено только владельцем вещи.
     @Transactional
-    public BookingInfoDto approve(Long ownerId, Long bookingId, Boolean approved) {
+    public BookingResponseDto approve(Long ownerId, Long bookingId, Boolean approved) {
         userRepository.existsById(ownerId);
         Booking booking = repository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException(String.format("Заявка " +
@@ -79,11 +79,11 @@ public class BookingServiceImpl implements BookingService {
         }
         if (approved != null) booking.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
         booking = repository.save(booking);
-        return BookingMapper.toBookingInfoDto(booking);
+        return BookingMapper.toBookingResponseDto(booking);
     }
 
     @Transactional
-    public BookingInfoDto getById(Long userId, Long bookingId) {
+    public BookingResponseDto getById(Long userId, Long bookingId) {
         Booking booking = repository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException(String.format("Заявка " +
                         "на бронирование с идентификатором %d не найдена", bookingId)));
@@ -92,11 +92,11 @@ public class BookingServiceImpl implements BookingService {
             throw new NoAccessException("У пользователя нет прав " +
                     "для просмотра данной заявки на редактирование");
         }
-        return BookingMapper.toBookingInfoDto(booking);
+        return BookingMapper.toBookingResponseDto(booking);
     }
 
     @Transactional(readOnly = true)
-    public List<BookingInfoDto> getAllBookingByUser(Long userId, String state) {
+    public List<BookingResponseDto> getAllBookingByUser(Long userId, String state) {
         State state1 = State.validateState(state);
         User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь " +
@@ -127,12 +127,12 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return bookings.isEmpty() ? Collections.emptyList() : bookings.stream()
-                .map(BookingMapper::toBookingInfoDto)
+                .map(BookingMapper::toBookingResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<BookingInfoDto> getAllBookingByOwner(Long userId, String state) {
+    public List<BookingResponseDto> getAllBookingByOwner(Long userId, String state) {
             State state1 = State.validateState(state);
             User owner = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
             List<Booking> bookings = new ArrayList<>();
@@ -160,7 +160,7 @@ public class BookingServiceImpl implements BookingService {
             }
 
             return bookings.isEmpty() ? Collections.emptyList() : bookings.stream()
-                    .map(BookingMapper::toBookingInfoDto)
+                    .map(BookingMapper::toBookingResponseDto)
                     .collect(Collectors.toList());
         }
 

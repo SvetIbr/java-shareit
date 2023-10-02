@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserInfoDto {
+public class UserShortDto {
     private final Long id;
 }

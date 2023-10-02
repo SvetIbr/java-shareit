@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 import ru.practicum.shareIt.item.comment.service.CommentService;
 import ru.practicum.shareIt.item.dto.ItemDto;
+import ru.practicum.shareIt.item.dto.ItemOwnerDto;
 import ru.practicum.shareIt.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -80,8 +81,8 @@ public class ItemController {
      * @return список объектов itemDto
      */
     @GetMapping
-    public List<ItemDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
-        return service.getByOwner(userId);
+    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
+        return service.getByOwner(userId); // возвращать список для владельца - видит ласт и некст букинг
     }
 
     /**

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-public class BookingDto {
+public class BookingRequestDto {
 
     private Long id;
 
@@ -29,7 +29,7 @@ public class BookingDto {
     @NotNull
     private Long itemId;
 
-    private Long booker;
+    private Long bookerId;
 
     private BookingStatus status;
 }

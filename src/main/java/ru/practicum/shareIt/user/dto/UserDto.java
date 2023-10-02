@@ -3,7 +3,6 @@ package ru.practicum.shareIt.user.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

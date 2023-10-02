@@ -2,8 +2,8 @@ package ru.practicum.shareIt.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareIt.booking.dto.LastBookingDto;
-import ru.practicum.shareIt.booking.dto.NextBookingDto;
+import ru.practicum.shareIt.booking.dto.BookingRequestDto;
+import ru.practicum.shareIt.booking.dto.BookingShortDto;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 
 import javax.validation.constraints.NotBlank;
@@ -48,10 +48,10 @@ public class ItemDto {
     private Long owner;
 
     private Long request;
+    private BookingShortDto lastBooking;
 
-    private LastBookingDto lastBooking;
+    private BookingShortDto nextBooking;
 
-    private NextBookingDto nextBooking;
     private List<CommentDto> comments;
 }
 

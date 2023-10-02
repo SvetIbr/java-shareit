@@ -8,14 +8,12 @@ import ru.practicum.shareIt.booking.model.Booking;
 import ru.practicum.shareIt.booking.repository.BookingRepository;
 import ru.practicum.shareIt.booking.status.BookingStatus;
 import ru.practicum.shareIt.error.exception.BadRequestException;
-import ru.practicum.shareIt.error.exception.BookingNotFoundException;
 import ru.practicum.shareIt.error.exception.ItemNotFoundException;
 import ru.practicum.shareIt.error.exception.UserNotFoundException;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 import ru.practicum.shareIt.item.comment.mapper.CommentMapper;
 import ru.practicum.shareIt.item.comment.model.Comment;
 import ru.practicum.shareIt.item.comment.repository.CommentRepository;
-import ru.practicum.shareIt.item.comment.service.CommentService;
 import ru.practicum.shareIt.item.model.Item;
 import ru.practicum.shareIt.item.repository.ItemRepository;
 import ru.practicum.shareIt.user.model.User;
@@ -49,7 +47,6 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.toCommentDto(comment);
     }
 
-
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByItem(Long itemId) {
         List<Comment> comments = commentRepository.findAllByItemId(itemId);
@@ -57,7 +54,5 @@ public class CommentServiceImpl implements CommentService {
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
     }
-
-
 
 }
