@@ -1,6 +1,5 @@
 package ru.practicum.shareIt.item.comment.service;
 
-import ru.practicum.shareIt.booking.dto.BookingRequestDto;
 import ru.practicum.shareIt.booking.dto.BookingResponseDto;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 
