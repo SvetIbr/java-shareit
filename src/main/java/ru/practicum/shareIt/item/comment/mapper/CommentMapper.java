@@ -7,7 +7,19 @@ import ru.practicum.shareIt.user.model.User;
 
 import java.time.LocalDateTime;
 
+/**
+ * Mapper-класс для преобразования объектов Comment в CommentDto и наоборот
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
+ */
 public class CommentMapper {
+    /**
+     * Метод преобразования объекта Comment в CommentDto
+     *
+     * @param comment {@link Comment}
+     * @return {@link CommentDto}
+     */
     public static CommentDto toCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
@@ -17,6 +29,15 @@ public class CommentMapper {
                 .build();
     }
 
+    /**
+     * Метод преобразования объекта CommentDto в Comment
+     *
+     * @param commentDto {@link CommentDto}
+     * @param item       {@link Item}
+     * @param author     {@link User}
+     * @param time       - дата создания
+     * @return {@link Comment}
+     */
     public static Comment toComment(CommentDto commentDto, Item item, User author, LocalDateTime time) {
         return Comment.builder()
                 .id(commentDto.getId())

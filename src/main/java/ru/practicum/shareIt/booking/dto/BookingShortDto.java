@@ -3,26 +3,35 @@ package ru.practicum.shareIt.booking.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * Класс бронирования со свойствами <b>id</b>, <b>start</b>, <b>end</b>,
+ * <b>bookerId</b> для работы через REST-интерфейс
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
+ */
 @Builder
 @Data
 public class BookingShortDto {
+    /**
+     * Поле идентификатор
+     */
     private Long id;
 
-    @NotNull
-    @FutureOrPresent(message = "Дата старта не может быть в прошлом")
+    /**
+     * Поле дата начала бронирования
+     */
     private LocalDateTime start;
 
-    @NotNull
-    @Future(message = "Дата окончания не может быть в прошлом или настоящем")
+    /**
+     * Поле дата окончания бронирования
+     */
     private LocalDateTime end;
 
-//    @NotNull
-//    private Long itemId;
-
+    /**
+     * Поле идентификатор арендатора вещи
+     */
     private Long bookerId;
 }

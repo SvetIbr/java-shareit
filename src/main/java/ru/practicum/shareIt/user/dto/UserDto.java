@@ -38,7 +38,6 @@ public class UserDto {
             "- только буквы и цифры")
     @Email(message = "Некорректный email")
     @NotBlank(message = "Не заполнено поле \"email\"")
-    //@Column(unique = true)
     private String email;
 }
 

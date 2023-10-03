@@ -1,10 +1,9 @@
 package ru.practicum.shareIt.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareIt.booking.dto.BookingRequestDto;
+import ru.practicum.shareIt.booking.dto.BookingShortDto;
 import ru.practicum.shareIt.booking.mapper.BookingMapper;
 import ru.practicum.shareIt.booking.model.Booking;
 import ru.practicum.shareIt.booking.repository.BookingRepository;
@@ -37,8 +36,6 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentService commentService;
-    static final Sort SORT_ASC = Sort.by(Sort.Direction.ASC, "end");
-    static final Sort SORT_DESC = Sort.by(Sort.Direction.DESC, "end");
 
     @Transactional
     public ItemDto create(Long userId, ItemDto itemDto) {
@@ -84,18 +81,14 @@ public class ItemServiceImpl implements ItemService {
         itemDto.setOwner(owner.getId());
         List<CommentDto> commentsDto = commentService.getCommentsByItem(itemId);
         itemDto.setComments(commentsDto);
+
         if (!userId.equals(owner.getId())) {
             return itemDto;
         }
 
-        Optional<Booking> lastBooking = bookingRepository.findTop1BookingByItemIdAndStartIsBeforeAndStatusIs(
-                itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED, SORT_DESC);
-        lastBooking.ifPresent(booking -> itemDto.setLastBooking(BookingMapper.toBookingShortDto(booking)));
+        itemDto.setLastBooking(getLastBooking(itemId));
+        itemDto.setNextBooking(getNextBooking(itemId));
 
-
-        Optional<Booking> nextBooking = bookingRepository.findTop1BookingByItemIdAndStartIsAfterAndStatusIs(
-                itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED, SORT_ASC);
-        nextBooking .ifPresent(booking -> itemDto.setNextBooking(BookingMapper.toBookingShortDto(booking)));
         return itemDto;
     }
 
@@ -116,19 +109,14 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemMapper::toItemOwnerDto)
                 .collect(Collectors.toList());
 
-        for (ItemOwnerDto itemOwnerDto : itemsOwnerDto) {
-            List<CommentDto> commentsDto = commentService.getCommentsByItem(itemOwnerDto.getId());
+        itemsOwnerDto.forEach(itemOwnerDto -> {
+            Long idItem = itemOwnerDto.getId();
+            List<CommentDto> commentsDto = commentService.getCommentsByItem(idItem);
             itemOwnerDto.setComments(commentsDto);
+            itemOwnerDto.setLastBooking(getLastBooking(idItem));
+            itemOwnerDto.setNextBooking(getNextBooking(idItem));
+        });
 
-            Optional<Booking> lastBooking = bookingRepository.findTop1BookingByItemIdAndStartIsBeforeAndStatusIs(
-                    itemOwnerDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED, SORT_DESC);
-            lastBooking.ifPresent(booking -> itemOwnerDto.setLastBooking(BookingMapper.toBookingShortDto(booking)));
-
-
-            Optional<Booking> nextBooking = bookingRepository.findTop1BookingByItemIdAndStartIsAfterAndStatusIs(
-                    itemOwnerDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED, SORT_ASC);
-            nextBooking .ifPresent(booking -> itemOwnerDto.setNextBooking(BookingMapper.toBookingShortDto(booking)));
-        }
         return itemsOwnerDto;
     }
 
@@ -136,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(Long userId, String text) {
         checkUserInUserStorage(userId);
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
-        return repository.searchAvailableByText(text).stream()
+        return repository.searchByText(text).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
@@ -160,5 +148,19 @@ public class ItemServiceImpl implements ItemService {
                 throw new BadRequestException("Не указан идентификатор пользователя");
             }
         }
+    }
+
+    private BookingShortDto getLastBooking(Long itemId) {
+        Optional<Booking> lastBooking = bookingRepository
+                .findTop1BookingByItemIdAndStartIsBeforeAndStatusIsOrderByEndDesc(
+                        itemId, LocalDateTime.now(), BookingStatus.APPROVED);
+        return lastBooking.map(BookingMapper::toBookingShortDto).orElse(null);
+    }
+
+    private BookingShortDto getNextBooking(Long itemId) {
+        Optional<Booking> nextBooking = bookingRepository
+                .findTop1BookingByItemIdAndStartIsAfterAndStatusIsOrderByStartAsc(
+                        itemId, LocalDateTime.now(), BookingStatus.APPROVED);
+        return nextBooking.map(BookingMapper::toBookingShortDto).orElse(null);
     }
 }

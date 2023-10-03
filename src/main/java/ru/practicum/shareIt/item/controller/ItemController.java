@@ -28,6 +28,9 @@ public class ItemController {
      */
     private final ItemService service;
 
+    /**
+     * Поле сервис для работы с комментариями
+     */
     private final CommentService commentService;
     /**
      * Поле образец заголовка запроса для указания  идентификатора пользователя
@@ -37,6 +40,7 @@ public class ItemController {
     /**
      * Метод добавления вещи в хранилище сервиса через запрос
      *
+     * @param userId  - идентификатор владельца
      * @param itemDto {@link ItemDto}
      * @return копию объекта itemDto с добавленным id и код ответа API 201
      */
@@ -78,11 +82,11 @@ public class ItemController {
      * Метод получения владельцем списка всех его вещей из хранилища сервиса через запрос
      *
      * @param userId - идентификатор пользователя, который является владельцем вещей
-     * @return список объектов itemDto
+     * @return список объектов ItemOwnerDto
      */
     @GetMapping
     public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
-        return service.getByOwner(userId); // возвращать список для владельца - видит ласт и некст букинг
+        return service.getByOwner(userId);
     }
 
     /**
@@ -98,6 +102,14 @@ public class ItemController {
         return service.search(userId, text);
     }
 
+    /**
+     * Метод добавления комментария к вещи через запрос
+     *
+     * @param userId     - идентификатор пользователя, добавлющего комментарий
+     * @param itemId     - идентификатор вещи, которой добавляют комментарий
+     * @param commentDto - {@link CommentDto}
+     * @return CommentDto {@link CommentDto}
+     */
     @PostMapping("/{itemId}/comment")
     public CommentDto comment(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
                               @PathVariable Long itemId,

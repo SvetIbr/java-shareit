@@ -15,20 +15,42 @@ import java.util.List;
 import static ru.practicum.shareIt.item.controller.ItemController.HEADER_WITH_OWNER_ID;
 
 /**
- * TODO Sprint add-bookings.
+ * Класс контроллера для работы с запросами к сервису бронирования
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
 public class BookingController {
-
+    /**
+     * Поле сервис для работы с хранилищем бронирования
+     */
     private final BookingService service;
+
+    /**
+     * Метод добавления бронирования в хранилище сервиса через запрос
+     *
+     * @param userId     - идентификатор пользователя, создающего бронирование
+     * @param bookingDto {@link BookingRequestDto}
+     * @return {@link BookingResponseDto} с добавленным id и код ответа API 201
+     */
     @PostMapping
     public BookingResponseDto create(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
                                      @Valid @RequestBody BookingRequestDto bookingDto) {
         return new ResponseEntity<>(service.create(userId, bookingDto), HttpStatus.CREATED).getBody();
     }
 
+    /**
+     * Метод подтверждения/отклонения запроса на бронирование вещи
+     *
+     * @param userId    - идентификатор владельца вещи
+     * @param bookingId - идентификатор бронирования
+     * @param approved  - значение смены статуса: true, если подтверждение запроса на бронирование,
+     *                  false, если отклонение запроса
+     * @return {@link BookingResponseDto}
+     */
     @PatchMapping("/{bookingId}")
     public BookingResponseDto approve(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
                                       @PathVariable Long bookingId,
@@ -36,23 +58,40 @@ public class BookingController {
         return service.approve(userId, bookingId, approved);
     }
 
-    //Получение данных о конкретном бронировании (включая его статус).
-    // Может быть выполнено либо автором бронирования, либо владельцем вещи,
-    // к которой относится бронирование.
+    /**
+     * Метод получения информации о конкретном бронировании из хранилища сервиса
+     * по идентификатору через запрос. Может быть выполнено либо автором бронирования,
+     * либо владельцем вещи, к которой относится бронирование.
+     *
+     * @param userId    - идентификатор пользователя, запрашивающего информацию
+     * @param bookingId - идентификатор бронирования
+     * @return {@link BookingResponseDto}
+     */
     @GetMapping("/{bookingId}")
     public BookingResponseDto getById(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
                                       @PathVariable Long bookingId) {
         return service.getById(userId, bookingId);
     }
 
-    //Получение списка всех бронирований текущего пользователя.
+    /**
+     * Метод получения списка всех бронирований текущего пользователя из хранилища сервиса через запрос
+     *
+     * @param userId - идентификатор пользователя, запрашивающего список
+     * @return список объектов {@link BookingResponseDto}
+     */
     @GetMapping
     public List<BookingResponseDto> get(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
                                         @RequestParam(defaultValue = "ALL", required = false) String state) {
         return service.getAllBookingByUser(userId, state);
     }
 
-    //Получение списка бронирований для всех вещей текущего пользователя.
+    /**
+     * Метод получения списка бронирований для всех вещей текущего пользователя
+     * из хранилища сервиса через запрос
+     *
+     * @param userId - идентификатор пользователя, запрашивающего список (владелец)
+     * @return список объектов {@link BookingResponseDto}
+     */
     @GetMapping("/owner")
     public List<BookingResponseDto> getByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
                                                @RequestParam(defaultValue = "ALL", required = false) String state) {

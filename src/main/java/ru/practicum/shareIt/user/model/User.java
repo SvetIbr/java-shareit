@@ -16,7 +16,6 @@ import java.util.Objects;
  * @author Светлана Ибраева
  * @version 1.0
  */
-
 @Entity
 @Table(name = "users")
 @Getter

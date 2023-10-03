@@ -1,7 +1,6 @@
 package ru.practicum.shareIt.item.comment.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareIt.booking.model.Booking;
@@ -32,15 +31,19 @@ public class CommentServiceImpl implements CommentService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
 
-
     @Transactional
     public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("item not found"));
-        User author = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-        Sort sortDesc = Sort.by(Sort.Direction.DESC, "end");
-        Booking booking = bookingRepository.findTop1BookingByItemIdAndBookerIdAndEndIsBeforeAndStatusIs(
-                itemId, userId, LocalDateTime.now(), BookingStatus.APPROVED, sortDesc).orElseThrow(
-                () -> new BadRequestException("no booking for comment"));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(String.format("Вещь " +
+                        "с идентификатором %d не найдена", itemId)));
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь " +
+                        "с идентификатором %d не найден", userId)));
+        Booking booking = bookingRepository
+                .findTop1BookingByItemIdAndBookerIdAndEndIsBeforeAndStatusIsOrderByEndDesc(
+                        itemId, userId, LocalDateTime.now(), BookingStatus.APPROVED)
+                .orElseThrow(() -> new BadRequestException("Не найдено информации " +
+                        "о бронировании Вами данной вещи"));
 
         Comment comment = CommentMapper.toComment(commentDto, item, author, LocalDateTime.now());
         comment = commentRepository.save(comment);
@@ -54,5 +57,4 @@ public class CommentServiceImpl implements CommentService {
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
     }
-
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareIt.error.exception.BadRequestException;
-import ru.practicum.shareIt.error.exception.DuplicateEmailException;
 import ru.practicum.shareIt.error.exception.UserNotFoundException;
 import ru.practicum.shareIt.item.model.Item;
 import ru.practicum.shareIt.item.repository.ItemRepository;
@@ -25,10 +24,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserDto create(UserDto userDto) {
-//        if ((repository.existsUserByEmail(userDto.getEmail()))) {
-//            throw new DuplicateEmailException("Пользователь " +
-//                    "c такой электронной почтой уже зарегистрирован");
-//        }
         User user = UserMapper.toUser(userDto);
         user = repository.save(user);
         return UserMapper.toUserDto(user);
@@ -42,13 +37,9 @@ public class UserServiceImpl implements UserService {
         }
         User userToUpdate = repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(String.format("Пользователь " +
-                "с идентификатором %d не найден", id)));
+                        "с идентификатором %d не найден", id)));
 
         if (userDto.getEmail() != null) {
-//            if ((repository.existsUserByEmail(userDto.getEmail()))) {
-//                throw new DuplicateEmailException("Пользователь " +
-//                        "c такой электронной почтой уже зарегистрирован");
-//            }
             userToUpdate.setEmail(userDto.getEmail());
         }
         if (userDto.getName() != null) {

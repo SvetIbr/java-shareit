@@ -1,8 +1,8 @@
 package ru.practicum.shareIt.item.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareIt.booking.dto.BookingRequestDto;
 import ru.practicum.shareIt.booking.dto.BookingShortDto;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 
@@ -12,7 +12,8 @@ import java.util.List;
 
 /**
  * Класс вещи со свойствами <b>id</b>, <b>name</b>, <b>description</b>,
- * <b>available</b> для работы через REST-интерфейс
+ * <b>available</b>, <b>owner</b>, <b>request</b>, <b>lastBooking</b>, <b>nextBooking</b>
+ * и <b>comments</b> для работы через REST-интерфейс
  *
  * @author Светлана Ибраева
  * @version 1.0
@@ -45,13 +46,30 @@ public class ItemDto {
     @NotNull(message = "Не указан статус доступности")
     private Boolean available;
 
+    /**
+     * Поле идентификатор владельца
+     */
     private Long owner;
 
+    /**
+     * Поле идентификатор запроса на вещь
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long request;
+
+    /**
+     * Поле последнее бронирование с краткой информацией о нем
+     */
     private BookingShortDto lastBooking;
 
+    /**
+     * Поле следующее бронирование с краткой информацией о нем
+     */
     private BookingShortDto nextBooking;
 
+    /**
+     * Поле список комментариев
+     */
     private List<CommentDto> comments;
 }
 

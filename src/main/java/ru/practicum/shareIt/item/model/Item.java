@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  * Класс вещи со свойствами <b>id</b>, <b>name</b>, <b>description</b>,
- * <b>available</b>, <b>owner</b> для работы с базой данных
+ * <b>available</b>, <b>owner</b>, <b>request</b> для работы с базой данных
  *
  * @author Светлана Ибраева
  * @version 1.0
@@ -59,13 +59,13 @@ public class Item {
      * Поле владелец
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "owner_id")
     @NotNull(message = "Не указан владелец")
     private User owner;
 
     /**
-     *  Поле запрос на вещь:
-     *  если вещь была создана по запросу другого пользователя, то в этом
+     * Поле запрос на вещь:
+     * если вещь была создана по запросу другого пользователя, то в этом
      * поле будет храниться ссылка на соответствующий запрос
      */
     @ManyToOne(fetch = FetchType.LAZY)

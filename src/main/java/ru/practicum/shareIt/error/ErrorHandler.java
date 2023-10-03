@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareIt.error.exception.*;
 import ru.practicum.shareIt.item.model.Item;
-import ru.practicum.shareIt.user.model.User;
 
 /**
  * Класс обработчика возникающих исключений
@@ -25,18 +24,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * Метод обработки исключений при обнаружении email{@link User#getEmail()},
-     * идентичного одному из уже имеющихся в хранилище
-     *
-     * @return сообщение с описанием причины возникновения ошибки и статусом 409
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleDuplicateEmailException(final DuplicateEmailException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -72,23 +59,39 @@ public class ErrorHandler {
      * @return сообщение с описанием причины возникновения ошибки и статусом 403
      */
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)//Forbidden
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNoAccessException(final NoAccessException e) {
         return new ErrorResponse(e.getMessage());
     }
 
+    /**
+     * Метод обработки исключений при отсутствии
+     * искомых объектов booking {@link ru.practicum.shareIt.booking.model.Booking} по идентификатору
+     *
+     * @return сообщение с описанием причины возникновения ошибки и статусом 404
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
+    /**
+     * Метод обработки исключений при статусе бронирования, который не предусмотрен списком статусов
+     *
+     * @return сообщение с описанием причины возникновения ошибки и статусом 400
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidStatusException(final InvalidStatusException e) {
         return new ErrorResponse(e.getMessage());
     }
 
+    /**
+     * Метод обработки исключений при невозможных значения времени бронирования
+     *
+     * @return сообщение с описанием причины возникновения ошибки и статусом 400
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidDateTimeException(final InvalidDateTimeException e) {
