@@ -1,6 +1,8 @@
 package ru.practicum.shareIt.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareIt.booking.dto.BookingShortDto;
@@ -93,14 +95,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemOwnerDto> getByOwner(Long userId) {
+    public List<ItemOwnerDto> getByOwner(Long userId, Integer from, Integer size) {
         if (userId == null) {
             throw new BadRequestException("Не указан идентификатор владельца");
         }
-
         checkUserInUserStorage(userId);
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("the size or from must be greater than 0");
+        }
 
-        List<Item> items = repository.findAllByOwnerId(userId);
+        Page<Item> items = repository.findAllByOwnerIdOrderByIdDesc(userId,
+                PageRequest.of(from / size, size));
         if (items.isEmpty()) {
             return new ArrayList<>();
         }
@@ -121,10 +126,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemDto> search(Long userId, String text) {
+    public List<ItemDto> search(Long userId, String text, Integer from, Integer size) {
         checkUserInUserStorage(userId);
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
-        return repository.searchByText(text).stream()
+        return repository.searchByTextOrderByIdDesc(text, PageRequest.of(from / size, size)).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 

@@ -49,7 +49,7 @@ public interface BookingService {
      * @param userId - идентификатор пользователя, запрашивающего список
      * @return список объектов {@link BookingResponseDto}
      */
-    List<BookingResponseDto> getAllBookingByUser(Long userId, String state);
+    List<BookingResponseDto> getAllBookingByUser(Long userId, String state, Integer from, Integer size);
 
     /**
      * Метод получения списка бронирований для всех вещей текущего пользователя
@@ -57,5 +57,5 @@ public interface BookingService {
      * @param userId - идентификатор пользователя, запрашивающего список (владелец)
      * @return список объектов {@link BookingResponseDto}
      */
-    List<BookingResponseDto> getAllBookingByOwner(Long userId, String state);
+    List<BookingResponseDto> getAllBookingByOwner(Long userId, String state, Integer from, Integer size);
 }

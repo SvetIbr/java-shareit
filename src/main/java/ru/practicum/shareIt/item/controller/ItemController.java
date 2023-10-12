@@ -85,8 +85,12 @@ public class ItemController {
      * @return список объектов ItemOwnerDto
      */
     @GetMapping
-    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
-        return service.getByOwner(userId);
+    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+                                          @RequestParam(required = false,
+                                                  defaultValue = "0") Integer from,
+                                          @RequestParam(required = false,
+                                                  defaultValue = "10") Integer size) {
+        return service.getByOwner(userId, from, size);
     }
 
     /**
@@ -98,8 +102,10 @@ public class ItemController {
      */
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
-                                @RequestParam(value = "text") String text) {
-        return service.search(userId, text);
+                                @RequestParam(value = "text") String text,
+                                @RequestParam(required = false, defaultValue = "0") Integer from,
+                                @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return service.search(userId, text, from, size);
     }
 
     /**

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareIt.error.exception.BadRequestException;
 import ru.practicum.shareIt.error.exception.UserNotFoundException;
-import ru.practicum.shareIt.item.model.Item;
 import ru.practicum.shareIt.item.repository.ItemRepository;
 import ru.practicum.shareIt.user.dto.UserDto;
 import ru.practicum.shareIt.user.mapper.UserMapper;
@@ -64,11 +63,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteById(Long id) {
         checkUserInStorage(id);
-        List<Long> idsItemsOfUser = itemRepository.findAllByOwnerId(id).stream()
-                .map(Item::getId).collect(Collectors.toList());
-        for (Long curId : idsItemsOfUser) {
-            itemRepository.deleteById(curId);
-        }
+        List<Long> idsItemsByOwner = itemRepository.findAllItemIdByOwner(id);
+        itemRepository.deleteAllById(idsItemsByOwner);
+//        List<Long> idsItemsOfUser = itemRepository.findAllByOwnerIdOrderByIdDesc(id, ).stream()
+//                .map(Item::getId).collect(Collectors.toList());
+//        for (Long curId : idsItemsOfUser) {
+//            itemRepository.deleteById(curId);
+//        }
         repository.deleteById(id);
     }
 

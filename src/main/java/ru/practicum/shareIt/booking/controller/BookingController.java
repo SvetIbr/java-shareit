@@ -81,8 +81,10 @@ public class BookingController {
      */
     @GetMapping
     public List<BookingResponseDto> get(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
-                                        @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return service.getAllBookingByUser(userId, state);
+                                        @RequestParam(defaultValue = "ALL", required = false) String state,
+                                        @RequestParam(required = false, defaultValue = "0") Integer from,
+                                        @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return service.getAllBookingByUser(userId, state, from, size);
     }
 
     /**
@@ -94,7 +96,9 @@ public class BookingController {
      */
     @GetMapping("/owner")
     public List<BookingResponseDto> getByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
-                                               @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return service.getAllBookingByOwner(userId, state);
+                                               @RequestParam(defaultValue = "ALL", required = false) String state,
+                                               @RequestParam(required = false, defaultValue = "0") Integer from,
+                                               @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return service.getAllBookingByOwner(userId, state, from, size);
     }
 }
