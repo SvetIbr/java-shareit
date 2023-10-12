@@ -1,6 +1,7 @@
 package ru.practicum.shareIt.item.service;
 
 import ru.practicum.shareIt.item.dto.ItemDto;
+import ru.practicum.shareIt.item.dto.ItemOwnerDto;
 
 import java.util.List;
 
@@ -43,13 +44,14 @@ public interface ItemService {
      * @param userId - идентификатор владельца
      * @return список объектов Item
      */
-    List<ItemDto> findByOwner(Long userId);
+    List<ItemOwnerDto> getByOwner(Long userId);
 
     /**
      * Метод получения списка вещей, в названии или описании которых содержится text
      *
+     * @param userId - идентификатор владельца
      * @param text - текст
      * @return список вещей, доступных для аренды и содержащх в описании или названии text
      */
-    List<ItemDto> search(String text);
+    List<ItemDto> search(Long userId, String text);
 }
