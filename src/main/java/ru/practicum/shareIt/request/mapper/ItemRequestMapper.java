@@ -9,7 +9,20 @@ import ru.practicum.shareIt.user.model.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper-класс для преобразования объектов сервиса запросов на вещи
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
+ */
 public class ItemRequestMapper {
+    /**
+     * Метод преобразования объекта ItemRequestDto в ItemRequest
+     *
+     * @param itemRequestDto {@link ItemRequestDto}
+     * @param user           - создатель запроса {@link User}
+     * @return ItemRequest {@link ItemRequest}
+     */
     public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto, User user) {
         return ItemRequest.builder()
                 .id(itemRequestDto.getId())
@@ -19,6 +32,13 @@ public class ItemRequestMapper {
                 .build();
     }
 
+    /**
+     * Метод преобразования объекта itemRequest в ItemRequestDto
+     *
+     * @param itemRequest {@link ItemRequest}
+     * @param items       - вещи, созданные в ответ на запрос {@link Item}
+     * @return ItemRequestDto {@link ItemRequestDto}
+     */
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest, List<Item> items) {
         List<ItemForRequestDto> itemsForRequest = null;
         if (items != null) {

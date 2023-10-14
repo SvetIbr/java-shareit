@@ -21,7 +21,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
      * @param userId - идентификатор владельца
      * @return список объектов Item
      */
-    Page<Item> findAllByOwnerIdOrderByIdDesc(Long userId, Pageable pageable);
+    Page<Item> findAllByOwnerIdOrderByIdAsc(Long userId, Pageable pageable);
 
     /**
      * Метод получения списка вещей, в названии или описании которых содержится text
@@ -38,7 +38,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "like upper(concat('%',?1,'%')))")
     Page<Item> searchByTextOrderByIdDesc(String text, Pageable pageable);
 
+    /**
+     * Метод получения списка вещей, которые были созданы в ответ на конкретный запрос
+     *
+     * @param id - идентификатор запроса
+     * @return список объектов Item
+     */
     List<Item> findItemsByRequestIdOrderByIdDesc(Long id);
-
-    List<Long> findAllItemIdByOwner(Long ownerId);
 }

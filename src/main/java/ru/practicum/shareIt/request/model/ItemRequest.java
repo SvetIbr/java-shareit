@@ -9,30 +9,43 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * TODO Sprint add-item-requests.
+ * Класс вещи со свойствами <b>id</b>, <b>description</b>, <b>requestor</b>,
+ * <b>created</b> для работы с базой данных
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
  */
 @Entity
 @Table(name = "requests")
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ItemRequest {
-
+    /**
+     * Поле идентификатор
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Поле описание
+     */
     @Column(name = "description")
     private String description;
 
+    /**
+     * Поле создатель запроса
+     */
     @ManyToOne
     @JoinColumn(name = "requestor_id")
     @NotNull
     private User requestor;
 
+    /**
+     * Поле дата создания
+     */
     @Column(name = "create_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd, hh:mm:ss")
     private LocalDateTime created;

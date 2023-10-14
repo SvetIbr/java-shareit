@@ -56,10 +56,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param now1   - окончание текущего времени
      * @return список объектов Booking
      */
-    Page<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(Long userId,
-                                                                                 LocalDateTime now,
-                                                                                 LocalDateTime now1,
-                                                                                 Pageable pageable);
+    Page<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartAsc(Long userId,
+                                                                                LocalDateTime now,
+                                                                                LocalDateTime now1,
+                                                                                Pageable pageable);
 
     /**
      * Метод получения списка всех бронирований с определенным статусом текущего пользователя,
@@ -138,7 +138,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param bookingStatus - статус бронирования
      * @return Optional<Booking>
      */
-    Optional<Booking> findTop1BookingByItemIdAndBookerIdAndEndIsBeforeAndStatusIsOrderByEndDesc(Long itemId, Long userId, LocalDateTime now, BookingStatus bookingStatus);
+    Optional<Booking> findTop1BookingByItemIdAndBookerIdAndEndIsBeforeAndStatusIsOrderByEndDesc(Long itemId,
+                                                                                                Long userId,
+                                                                                                LocalDateTime now,
+                                                                                                BookingStatus
+                                                                                                        bookingStatus);
 
     /**
      * Метод получения Optional последнего бронирования вещи
@@ -148,7 +152,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param bookingStatus - статус бронирования
      * @return Optional<Booking>
      */
-    Optional<Booking> findTop1BookingByItemIdAndStartIsBeforeAndStatusIsOrderByEndDesc(Long id, LocalDateTime now, BookingStatus bookingStatus);
+    Optional<Booking> findTop1BookingByItemIdAndStartIsBeforeAndStatusIsOrderByEndDesc(Long id,
+                                                                                       LocalDateTime now,
+                                                                                       BookingStatus bookingStatus);
 
     /**
      * Метод получения Optional следующего бронирования вещи
@@ -158,5 +164,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param bookingStatus - статус бронирования
      * @return Optional<Booking>
      */
-    Optional<Booking> findTop1BookingByItemIdAndStartIsAfterAndStatusIsOrderByStartAsc(Long id, LocalDateTime now, BookingStatus bookingStatus);
+    Optional<Booking> findTop1BookingByItemIdAndStartIsAfterAndStatusIsOrderByStartAsc(Long id,
+                                                                                       LocalDateTime now,
+                                                                                       BookingStatus bookingStatus);
 }

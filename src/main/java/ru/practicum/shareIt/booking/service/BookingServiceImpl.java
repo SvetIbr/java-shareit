@@ -88,9 +88,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseDto> getAllBookingByUser(Long userId, String state, Integer from, Integer size) {
+    public List<BookingResponseDto> getAllBookingByUser(Long userId, String state,
+                                                        Integer from, Integer size) {
         State actualState = State.validateState(state);
         checkUserInUserStorage(userId);
+        LocalDateTime curTime = LocalDateTime.now();
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("the size or from must be greater than 0");
+        }
 
         Page<Booking> bookings = null;
 
@@ -102,17 +107,17 @@ public class BookingServiceImpl implements BookingService {
             case PAST:
                 bookings = repository
                         .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId,
-                                LocalDateTime.now(), PageRequest.of(from / size, size));
+                                curTime, PageRequest.of(from / size, size));
                 break;
             case FUTURE:
                 bookings = repository
                         .findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId,
-                                LocalDateTime.now(), PageRequest.of(from / size, size));
+                                curTime, PageRequest.of(from / size, size));
                 break;
             case CURRENT:
                 bookings = repository
-                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-                                userId, LocalDateTime.now(), LocalDateTime.now(),
+                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartAsc(
+                                userId, curTime, LocalDateTime.now(),
                                 PageRequest.of(from / size, size));
                 break;
             case WAITING:
@@ -133,9 +138,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseDto> getAllBookingByOwner(Long userId, String state, Integer from, Integer size) {
+    public List<BookingResponseDto> getAllBookingByOwner(Long userId, String state,
+                                                         Integer from, Integer size) {
         State actualState = State.validateState(state);
         checkUserInUserStorage(userId);
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("the size or from must be greater than 0");
+        }
+        LocalDateTime curTime = LocalDateTime.now();
 
         Page<Booking> bookings = null;
 
@@ -147,17 +157,17 @@ public class BookingServiceImpl implements BookingService {
             case PAST:
                 bookings = repository
                         .findAllByItemOwnerIdAndEndIsBeforeOrderByStartDesc(userId,
-                                LocalDateTime.now(), PageRequest.of(from / size, size));
+                                curTime, PageRequest.of(from / size, size));
                 break;
             case FUTURE:
                 bookings = repository
                         .findAllByItemOwnerIdAndStartIsAfterOrderByStartDesc(userId,
-                                LocalDateTime.now(), PageRequest.of(from / size, size));
+                                curTime, PageRequest.of(from / size, size));
                 break;
             case CURRENT:
                 bookings = repository
                         .findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
-                                LocalDateTime.now(), LocalDateTime.now(), PageRequest.of(from / size, size));
+                                curTime, LocalDateTime.now(), PageRequest.of(from / size, size));
                 break;
             case WAITING:
                 bookings = repository

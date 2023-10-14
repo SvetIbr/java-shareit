@@ -18,9 +18,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -35,7 +33,6 @@ public class User {
     /**
      * Поле имя
      */
-    //@Column(name = "name")
     @Pattern(regexp = "^[^/:*?\"<>|]+$", message = "Не используйте символы для указания имени " +
             "- только буквы и цифры")
     @NotNull(message = "Не указано имя")

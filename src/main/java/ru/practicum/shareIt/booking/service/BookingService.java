@@ -47,6 +47,9 @@ public interface BookingService {
      * Метод получения списка всех бронирований текущего пользователя из хранилища
      *
      * @param userId - идентификатор пользователя, запрашивающего список
+     * @param state  - состояние запрашиваемых бронирований
+     * @param from   - индекс первого элемента, начиная с 0
+     * @param size   - количество элементов для отображения
      * @return список объектов {@link BookingResponseDto}
      */
     List<BookingResponseDto> getAllBookingByUser(Long userId, String state, Integer from, Integer size);
@@ -55,6 +58,9 @@ public interface BookingService {
      * Метод получения списка бронирований для всех вещей текущего пользователя
      *
      * @param userId - идентификатор пользователя, запрашивающего список (владелец)
+     * @param state  - состояние запрашиваемых бронирований
+     * @param from   - индекс первого элемента, начиная с 0
+     * @param size   - количество элементов для отображения
      * @return список объектов {@link BookingResponseDto}
      */
     List<BookingResponseDto> getAllBookingByOwner(Long userId, String state, Integer from, Integer size);

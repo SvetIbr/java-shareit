@@ -104,7 +104,7 @@ public class ItemServiceImpl implements ItemService {
             throw new BadRequestException("the size or from must be greater than 0");
         }
 
-        Page<Item> items = repository.findAllByOwnerIdOrderByIdDesc(userId,
+        Page<Item> items = repository.findAllByOwnerIdOrderByIdAsc(userId,
                 PageRequest.of(from / size, size));
         if (items.isEmpty()) {
             return new ArrayList<>();
@@ -128,6 +128,9 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public List<ItemDto> search(Long userId, String text, Integer from, Integer size) {
         checkUserInUserStorage(userId);
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("the size or from must be greater than 0");
+        }
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
         return repository.searchByTextOrderByIdDesc(text, PageRequest.of(from / size, size)).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
