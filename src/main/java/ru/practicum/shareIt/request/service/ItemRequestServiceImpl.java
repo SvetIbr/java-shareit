@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService {
-
     private final ItemRequestRepository repository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -50,7 +49,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto getItemRequestById(Long userId, Long requestId) {
         checkUserInUserStorage(userId);
         ItemRequest itemRequest = repository.findById(requestId)
-                .orElseThrow(() -> new ItemRequestNotFoundException(String.format("itemRequest with id %d is not found", requestId)));
+                .orElseThrow(() -> new ItemRequestNotFoundException(String.format("Запрос " +
+                        "с идентификатором %d не найден", requestId)));
         List<Item> items = itemRepository.findItemsByRequestIdOrderByIdDesc(itemRequest.getId());
         return ItemRequestMapper.toItemRequestDto(itemRequest, items);
     }
@@ -61,7 +61,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
         checkUserInUserStorage(userId);
         if (from < 0 || size <= 0) {
-            throw new BadRequestException("the size or from must be greater than 0");
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
         return repository.getByRequestorIdNotOrderByCreatedDesc(userId,
                         PageRequest.of(from / size, size))

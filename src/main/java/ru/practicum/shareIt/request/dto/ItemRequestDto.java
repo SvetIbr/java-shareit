@@ -1,5 +1,6 @@
 package ru.practicum.shareIt.request.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.shareIt.item.dto.ItemForRequestDto;
 import ru.practicum.shareIt.user.model.User;
@@ -46,6 +47,7 @@ public class ItemRequestDto {
      * Поле дата создания
      */
     @Column(name = "create_date")
+    @JsonFormat(pattern = "yyyy.MM.dd, HH:mm:ss")
     private LocalDateTime created;
 
     /**

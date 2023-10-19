@@ -7,7 +7,6 @@ import ru.practicum.shareIt.user.model.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 /**
  * Класс вещи со свойствами <b>id</b>, <b>name</b>, <b>description</b>,
@@ -18,9 +17,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "items")
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -71,16 +68,4 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
     private ItemRequest request;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Item)) return false;
-        return id != null && id.equals(((Item) o).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

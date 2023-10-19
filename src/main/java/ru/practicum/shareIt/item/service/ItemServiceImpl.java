@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository repository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -101,14 +100,12 @@ public class ItemServiceImpl implements ItemService {
         }
         checkUserInUserStorage(userId);
         if (from < 0 || size <= 0) {
-            throw new BadRequestException("the size or from must be greater than 0");
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
 
         Page<Item> items = repository.findAllByOwnerIdOrderByIdAsc(userId,
                 PageRequest.of(from / size, size));
-        if (items.isEmpty()) {
-            return new ArrayList<>();
-        }
 
         List<ItemOwnerDto> itemsOwnerDto = items.stream()
                 .map(ItemMapper::toItemOwnerDto)
@@ -129,7 +126,8 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(Long userId, String text, Integer from, Integer size) {
         checkUserInUserStorage(userId);
         if (from < 0 || size <= 0) {
-            throw new BadRequestException("the size or from must be greater than 0");
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
         return repository.searchByTextOrderByIdDesc(text, PageRequest.of(from / size, size)).stream()

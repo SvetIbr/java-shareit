@@ -82,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = booking.getItem();
         if (!userId.equals(item.getOwner().getId()) && !userId.equals(booking.getBooker().getId())) {
             throw new NoAccessException("У пользователя нет прав " +
-                    "для просмотра данной заявки на редактирование");
+                    "для просмотра данной заявки на бронирование");
         }
         return BookingMapper.toBookingResponseDto(booking);
     }
@@ -94,7 +94,8 @@ public class BookingServiceImpl implements BookingService {
         checkUserInUserStorage(userId);
         LocalDateTime curTime = LocalDateTime.now();
         if (from < 0 || size <= 0) {
-            throw new BadRequestException("the size or from must be greater than 0");
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
 
         Page<Booking> bookings = null;
@@ -143,7 +144,8 @@ public class BookingServiceImpl implements BookingService {
         State actualState = State.validateState(state);
         checkUserInUserStorage(userId);
         if (from < 0 || size <= 0) {
-            throw new BadRequestException("the size or from must be greater than 0");
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
         LocalDateTime curTime = LocalDateTime.now();
 
