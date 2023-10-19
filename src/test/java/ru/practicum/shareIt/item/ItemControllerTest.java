@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import ru.practicum.shareIt.error.ErrorResponse;
 import ru.practicum.shareIt.error.exception.BadRequestException;
 import ru.practicum.shareIt.error.exception.ItemNotFoundException;
-import ru.practicum.shareIt.error.exception.UserNotFoundException;
 import ru.practicum.shareIt.item.comment.dto.CommentDto;
 import ru.practicum.shareIt.item.comment.mapper.CommentMapper;
 import ru.practicum.shareIt.item.comment.model.Comment;
