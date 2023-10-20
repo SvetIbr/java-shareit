@@ -133,9 +133,13 @@ public class BookingServiceImpl implements BookingService {
                 break;
         }
 
-        return !bookings.isEmpty() ? bookings.stream()
-                .map(BookingMapper::toBookingResponseDto)
-                .collect(Collectors.toList()) : Collections.emptyList();
+        if (bookings == null || bookings.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return bookings.stream()
+                    .map(BookingMapper::toBookingResponseDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -183,9 +187,13 @@ public class BookingServiceImpl implements BookingService {
                 break;
         }
 
-        return bookings.isEmpty() ? Collections.emptyList() : bookings.stream()
-                .map(BookingMapper::toBookingResponseDto)
-                .collect(Collectors.toList());
+        if (bookings == null || bookings.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return bookings.stream()
+                    .map(BookingMapper::toBookingResponseDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     private void checkUserInUserStorage(Long userId) {
