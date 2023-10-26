@@ -97,5 +97,17 @@ public class ErrorHandler {
     public ErrorResponse handleInvalidDateTimeException(final InvalidDateTimeException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    /**
+     * Метод обработки исключений при отсутствии
+     * искомых объектов ItemRequest {@link ru.practicum.shareIt.request.model.ItemRequest} по идентификатору
+     *
+     * @return сообщение с описанием причины возникновения ошибки и статусом 404
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }
 

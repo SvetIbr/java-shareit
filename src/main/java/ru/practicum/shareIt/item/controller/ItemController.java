@@ -82,24 +82,35 @@ public class ItemController {
      * Метод получения владельцем списка всех его вещей из хранилища сервиса через запрос
      *
      * @param userId - идентификатор пользователя, который является владельцем вещей
+     * @param from   - индекс первого элемента, начиная с 0
+     * @param size   - количество элементов для отображения
      * @return список объектов ItemOwnerDto
      */
     @GetMapping
-    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
-        return service.getByOwner(userId);
+    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+                                          @RequestParam(required = false,
+                                                  defaultValue = "0") Integer from,
+                                          @RequestParam(required = false,
+                                                  defaultValue = "10") Integer size) {
+        return service.getByOwner(userId, from, size);
     }
 
     /**
      * Метод получения через запрос списка вещей из хранилища сервиса,
      * в названии или описании которых содержится text
      *
-     * @param text - текст
+     * @param userId - идентификатор текущего пользователя
+     * @param text   - текст
+     * @param from   - индекс первого элемента, начиная с 0
+     * @param size   - количество элементов для отображения
      * @return список вещей, доступных для аренды и содержащх в описании или названии text
      */
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
-                                @RequestParam(value = "text") String text) {
-        return service.search(userId, text);
+                                @RequestParam(value = "text") String text,
+                                @RequestParam(required = false, defaultValue = "0") Integer from,
+                                @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return service.search(userId, text, from, size);
     }
 
     /**

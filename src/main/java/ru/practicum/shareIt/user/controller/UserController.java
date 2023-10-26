@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareIt.user.dto.UserDto;
-import ru.practicum.shareIt.user.service.UserServiceImpl;
+import ru.practicum.shareIt.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,7 +23,7 @@ public class UserController {
     /**
      * Поле сервис для работы с хранилищем пользователей
      */
-    private final UserServiceImpl service;
+    private final UserService service;
 
     /**
      * Метод добавления пользователя в хранилище сервиса через запрос

@@ -44,14 +44,14 @@ public interface ItemService {
      * @param userId - идентификатор владельца
      * @return список объектов Item
      */
-    List<ItemOwnerDto> getByOwner(Long userId);
+    List<ItemOwnerDto> getByOwner(Long userId, Integer from, Integer size);
 
     /**
      * Метод получения списка вещей, в названии или описании которых содержится text
      *
      * @param userId - идентификатор владельца
-     * @param text - текст
+     * @param text   - текст
      * @return список вещей, доступных для аренды и содержащх в описании или названии text
      */
-    List<ItemDto> search(Long userId, String text);
+    List<ItemDto> search(Long userId, String text, Integer from, Integer size);
 }

@@ -55,7 +55,7 @@ public class ItemDto {
      * Поле идентификатор запроса на вещь
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long request;
+    private Long requestId;
 
     /**
      * Поле последнее бронирование с краткой информацией о нем

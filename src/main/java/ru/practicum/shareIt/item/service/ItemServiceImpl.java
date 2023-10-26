@@ -1,6 +1,8 @@
 package ru.practicum.shareIt.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareIt.booking.dto.BookingShortDto;
@@ -31,7 +33,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository repository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -93,17 +94,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemOwnerDto> getByOwner(Long userId) {
+    public List<ItemOwnerDto> getByOwner(Long userId, Integer from, Integer size) {
         if (userId == null) {
             throw new BadRequestException("Не указан идентификатор владельца");
         }
-
         checkUserInUserStorage(userId);
-
-        List<Item> items = repository.findAllByOwnerId(userId);
-        if (items.isEmpty()) {
-            return new ArrayList<>();
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
         }
+
+        Page<Item> items = repository.findAllByOwnerIdOrderByIdAsc(userId,
+                PageRequest.of(from / size, size));
 
         List<ItemOwnerDto> itemsOwnerDto = items.stream()
                 .map(ItemMapper::toItemOwnerDto)
@@ -121,10 +123,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemDto> search(Long userId, String text) {
+    public List<ItemDto> search(Long userId, String text, Integer from, Integer size) {
         checkUserInUserStorage(userId);
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Параметры для отображения данных " +
+                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
+        }
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
-        return repository.searchByText(text).stream()
+        return repository.searchByTextOrderByIdDesc(text, PageRequest.of(from / size, size)).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
