@@ -252,23 +252,6 @@ public class BookingServiceTest {
     }
 
     @Test
-    void getAllBookingByUserWithFaiFromTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> bookingService.getAllBookingByUser(user2.getId(), "ALL", -1, -1));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
-    }
-
-    @Test
-    void getAllBookingByUserWithFailStateTest() {
-        final InvalidStatusException exception = assertThrows(InvalidStatusException.class, ()
-                -> bookingService.getAllBookingByUser(user2.getId(), "STATE", 0, 10));
-        assertEquals("Unknown state: STATE",
-                exception.getMessage());
-    }
-
-    @Test
     void getAllBookingByOwnerTest() {
         List<BookingResponseDto> items = bookingService.getAllBookingByOwner(user.getId(), "ALL", 0, 10);
         assertEquals(3, items.size());
@@ -308,22 +291,5 @@ public class BookingServiceTest {
     void getRejectedBookingByOwnerTest() {
         assertEquals(List.of(bookingReject).get(0).getId(),
                 bookingService.getAllBookingByOwner(user.getId(), "REJECTED", 0, 10).get(0).getId());
-    }
-
-    @Test
-    void getAllBookingByOwnerWithFailFromTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> bookingService.getAllBookingByOwner(user.getId(), "ALL", -1, -1));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
-    }
-
-    @Test
-    void getAllBookingByOwnerWithFailStateTest() {
-        final InvalidStatusException exception = assertThrows(InvalidStatusException.class, ()
-                -> bookingService.getAllBookingByOwner(user.getId(), "STATE", 0, 10));
-        assertEquals("Unknown state: STATE",
-                exception.getMessage());
     }
 }

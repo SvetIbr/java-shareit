@@ -9,7 +9,7 @@ import ru.practicum.shareit.request.service.ItemRequestService;
 
 import java.util.List;
 
-import static ru.practicum.shareit.item.controller.ItemController.HEADER_WITH_OWNER_ID;
+import static ru.practicum.shareit.utils.Constants.HEADER_WITH_USER_ID;
 
 /**
  * Класс контроллера для работы с запросами к сервису запроса вещей
@@ -34,7 +34,7 @@ public class ItemRequestController {
      * @return {@link ItemRequestDto} с добавленным id и код ответа API 201
      */
     @PostMapping
-    public ItemRequestDto create(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public ItemRequestDto create(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                  @RequestBody ItemRequestDto itemRequestDto) {
         return new ResponseEntity<>(service.create(userId, itemRequestDto), HttpStatus.CREATED).getBody();
     }
@@ -47,7 +47,7 @@ public class ItemRequestController {
      * @return список объектов {@link ItemRequestDto}
      */
     @GetMapping
-    public List<ItemRequestDto> getAllItemRequestByUser(@RequestHeader(HEADER_WITH_OWNER_ID) long userId) {
+    public List<ItemRequestDto> getAllItemRequestByUser(@RequestHeader(HEADER_WITH_USER_ID) long userId) {
         return service.getAllItemRequestByUser(userId);
     }
 
@@ -62,7 +62,7 @@ public class ItemRequestController {
      * @return список объектов {@link ItemRequestDto}
      */
     @GetMapping("/all")
-    public List<ItemRequestDto> getAllRequestsForUser(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<ItemRequestDto> getAllRequestsForUser(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                                       @RequestParam(required = false,
                                                               defaultValue = "0") Integer from,
                                                       @RequestParam(required = false,
@@ -80,7 +80,7 @@ public class ItemRequestController {
      * @return {@link ItemRequestDto}
      */
     @GetMapping("/{requestId}")
-    public ItemRequestDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemRequestDto getItemRequestById(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                              @PathVariable long requestId) {
         return service.getItemRequestById(userId, requestId);
     }

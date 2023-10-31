@@ -56,15 +56,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUserWithNullIdTest() {
-        UserDto userDto = userService.getById(1L);
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> userService.update(null, userDto));
-        assertEquals("Не указан идентификатор пользователя для обновления информации",
-                exception.getMessage());
-    }
-
-    @Test
     void updateUserWithFailIdTest() {
         UserDto userDto = userService.getById(1L);
         final UserNotFoundException exception = assertThrows(UserNotFoundException.class, ()

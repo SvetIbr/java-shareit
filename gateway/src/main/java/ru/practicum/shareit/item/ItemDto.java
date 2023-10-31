@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
+
     private Long id;
 
     @NotNull(message = "Не указано наименование")
@@ -24,5 +25,5 @@ public class ItemDto {
     @NotNull(message = "Не указан статус доступности")
     private Boolean available;
 
-    private Integer requestId;
+    private Long requestId;
 }

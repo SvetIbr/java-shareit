@@ -15,13 +15,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookItemRequestDto {
+
     private Long itemId;
 
-    @NotNull
-    @FutureOrPresent
+    @NotNull(message = "Не указана дата начала")
+    @FutureOrPresent(message = "Дата начала не может быть в прошлом")
     private LocalDateTime start;
 
-    @Future
-    @NotNull
+    @Future(message = "Дата окончания не может быть в прошлом или настоящем")
+    @NotNull(message = "Не указана дата окончания")
     private LocalDateTime end;
 }

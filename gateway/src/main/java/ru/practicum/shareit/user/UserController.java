@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
 
 import javax.validation.Valid;
 
@@ -23,6 +24,10 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
+        if (id == null) {
+            throw new BadRequestException("Не указан идентификатор пользователя " +
+                    "для обновления информации");
+        }
         log.info("Update user={}", userDto);
         return userClient.updateUser(id, userDto);
     }
@@ -30,19 +35,27 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable Long id) {
+        if (id == null) {
+            throw new BadRequestException("Не указан идентификатор пользователя " +
+                    "для обновления информации");
+        }
         log.info("Get user with id={}", id);
         return userClient.getUser(id);
     }
 
     @GetMapping
-    public ResponseEntity<Object> retrieveAllUsers() {
+    public ResponseEntity<Object> getAllUsers() {
         log.info("Get all users");
         return userClient.getUsers();
     }
 
     @DeleteMapping("/{id}")
-    public void removeUserById(@PathVariable Long id) {
+    public void deleteUserById(@PathVariable Long id) {
+        if (id == null) {
+            throw new BadRequestException("Не указан идентификатор пользователя " +
+                    "для обновления информации");
+        }
         log.info("Remove user with ID = {}", id);
-        userClient.removeUser(id);
+        userClient.deleteUserById(id);
     }
 }

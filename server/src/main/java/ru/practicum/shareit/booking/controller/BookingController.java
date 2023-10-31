@@ -11,7 +11,8 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 import java.util.List;
 
-import static ru.practicum.shareit.item.controller.ItemController.HEADER_WITH_OWNER_ID;
+import static ru.practicum.shareit.utils.Constants.HEADER_WITH_USER_ID;
+
 
 /**
  * Класс контроллера для работы с запросами к сервису бронирования
@@ -36,7 +37,7 @@ public class BookingController {
      * @return {@link BookingResponseDto} с добавленным id и код ответа API 201
      */
     @PostMapping
-    public BookingResponseDto create(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public BookingResponseDto create(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                      @RequestBody BookingRequestDto bookingDto) {
         return new ResponseEntity<>(service.create(userId, bookingDto), HttpStatus.CREATED).getBody();
     }
@@ -51,7 +52,7 @@ public class BookingController {
      * @return {@link BookingResponseDto}
      */
     @PatchMapping("/{bookingId}")
-    public BookingResponseDto approve(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+    public BookingResponseDto approve(@RequestHeader(HEADER_WITH_USER_ID) Long userId,
                                       @PathVariable Long bookingId,
                                       @RequestParam Boolean approved) {
         return service.approve(userId, bookingId, approved);
@@ -67,7 +68,7 @@ public class BookingController {
      * @return {@link BookingResponseDto}
      */
     @GetMapping("/{bookingId}")
-    public BookingResponseDto getById(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+    public BookingResponseDto getById(@RequestHeader(HEADER_WITH_USER_ID) Long userId,
                                       @PathVariable Long bookingId) {
         return service.getById(userId, bookingId);
     }
@@ -82,7 +83,7 @@ public class BookingController {
      * @return список объектов {@link BookingResponseDto}
      */
     @GetMapping
-    public List<BookingResponseDto> get(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+    public List<BookingResponseDto> get(@RequestHeader(HEADER_WITH_USER_ID) Long userId,
                                         @RequestParam(defaultValue = "ALL", required = false) String state,
                                         @RequestParam(required = false, defaultValue = "0") Integer from,
                                         @RequestParam(required = false, defaultValue = "10") Integer size) {
@@ -100,7 +101,7 @@ public class BookingController {
      * @return список объектов {@link BookingResponseDto}
      */
     @GetMapping("/owner")
-    public List<BookingResponseDto> getByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+    public List<BookingResponseDto> getByOwner(@RequestHeader(HEADER_WITH_USER_ID) Long userId,
                                                @RequestParam(defaultValue = "ALL", required = false) String state,
                                                @RequestParam(required = false, defaultValue = "0") Integer from,
                                                @RequestParam(required = false, defaultValue = "10") Integer size) {

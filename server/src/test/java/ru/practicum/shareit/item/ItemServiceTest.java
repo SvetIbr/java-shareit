@@ -115,30 +115,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    void updateWithNullUserIdTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.update(null, 1L, ItemMapper.toItemDto(item)));
-        assertEquals("Не указан идентификатор пользователя",
-                exception.getMessage());
-    }
-
-    @Test
-    void updateWithNullItemIdTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.update(1L, null, ItemMapper.toItemDto(item)));
-        assertEquals("Не указан идентификатор вещи для обновления информации",
-                exception.getMessage());
-    }
-
-    @Test
-    void updateWithNullItemIdAndNullUserIdTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.update(null, null, ItemMapper.toItemDto(item)));
-        assertEquals("Не указаны идентификаторы пользователя и вещи для обновления информации",
-                exception.getMessage());
-    }
-
-    @Test
     void updateWithFailItemIdTest() {
         final ItemNotFoundException exception = assertThrows(ItemNotFoundException.class, ()
                 -> itemService.update(1L, 13L, ItemMapper.toItemDto(item)));
@@ -194,32 +170,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    void getByOwnerWithFailOwnerIdTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.getByOwner(null, 0, 10));
-        assertEquals("Не указан идентификатор владельца",
-                exception.getMessage());
-    }
-
-    @Test
-    void getByOwnerWithFailFromTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.getByOwner(1L, -1, 10));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
-    }
-
-    @Test
-    void getByOwnerWithFailSizeTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.getByOwner(1L, 0, 0));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
-    }
-
-    @Test
     void searchByBlankTextTest() {
         assertEquals(new ArrayList<>(),
                 itemService.search(1L, " ", 0, 10));
@@ -229,15 +179,6 @@ public class ItemServiceTest {
     void searchByNullTextTest() {
         assertEquals(new ArrayList<>(),
                 itemService.search(1L, null, 0, 10));
-    }
-
-    @Test
-    void searchWithFailFromTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemService.search(1L, "дрель", -1, 12));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
     }
 
     @Test

@@ -33,17 +33,24 @@ public class ItemClient extends BaseClient {
         return patch("/" + itemId, userId, itemDto);
     }
 
-    public ResponseEntity<Object> getItem(Long itemId, Long userId) {
+    public ResponseEntity<Object> getItemById(Long itemId, Long userId) {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> getItems(Long userId) {
-        return get("", userId);
+    public ResponseEntity<Object> getItemsByOwner(Long userId, Integer from, Integer size) {
+        Map<String, Object> parameters = Map.of(
+                "from", from,
+                "size", size
+        );
+        return get("", userId, parameters);
     }
 
-    public ResponseEntity<Object> searchItemByKeyword(String text, Long userId) {
-        Map<String, Object> params = Map.of("text", text);
-        return get("/search?text={text}", userId, params);
+    public ResponseEntity<Object> searchItemByText(String text, Long userId, Integer from, Integer size) {
+        Map<String, Object> parameters = Map.of(
+                "text", text,
+                "from", from,
+                "size", size);
+        return get("/search?text={text}&from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> addComment(Long itemId, Long userId, CommentDto commentDto) {

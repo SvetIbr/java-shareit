@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemRequestDto {
+
     private Long id;
 
     @NotNull(message = "Не указано описание")

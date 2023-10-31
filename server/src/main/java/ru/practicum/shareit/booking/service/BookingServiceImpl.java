@@ -45,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new BadRequestException("Не указан статус доступности вещи");
         }
+
         if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
             throw new InvalidDateTimeException("Дата окончания бронирования " +
                     "не может быть раньше даты начала");
@@ -90,13 +91,10 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<BookingResponseDto> getAllBookingByUser(Long userId, String state,
                                                         Integer from, Integer size) {
-        State actualState = State.validateState(state);
         checkUserInUserStorage(userId);
+
         LocalDateTime curTime = LocalDateTime.now();
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Параметры для отображения данных " +
-                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
-        }
+        State actualState = State.valueOf(state);
 
         Page<Booking> bookings = null;
 
@@ -145,13 +143,10 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<BookingResponseDto> getAllBookingByOwner(Long userId, String state,
                                                          Integer from, Integer size) {
-        State actualState = State.validateState(state);
         checkUserInUserStorage(userId);
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Параметры для отображения данных " +
-                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
-        }
+
         LocalDateTime curTime = LocalDateTime.now();
+        State actualState = State.valueOf(state);
 
         Page<Booking> bookings = null;
 

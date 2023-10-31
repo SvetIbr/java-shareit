@@ -3,7 +3,6 @@ package ru.practicum.shareit.request.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.error.exception.BadRequestException;
 import ru.practicum.shareit.error.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.error.exception.UserNotFoundException;
 import ru.practicum.shareit.item.model.Item;
@@ -56,14 +55,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     public List<ItemRequestDto> getAllItemRequests(Long userId, Integer from, Integer size) {
-        if (userId == null) {
-            throw new BadRequestException("Не указан идентификатор владельца");
-        }
         checkUserInUserStorage(userId);
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Параметры для отображения данных " +
-                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
-        }
         return repository.getByRequestorIdNotOrderByCreatedDesc(userId,
                         PageRequest.of(from / size, size))
                 .stream()

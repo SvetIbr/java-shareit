@@ -8,7 +8,17 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Класс  реализации основных REST-методов с использованием RestTemplate
+ * для взаимодействия с сервером
+ *
+ * @author Светлана Ибраева
+ * @version 1.0
+ */
 public class BaseClient {
+    /**
+     * Поле клиент для выполнения HTTP-запросов
+     */
     protected final RestTemplate rest;
 
     public BaseClient(RestTemplate rest) {
@@ -80,7 +90,8 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.DELETE, path, userId, parameters, null);
     }
 
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long userId,
+    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path,
+                                                          Long userId,
                                                           @Nullable Map<String, Object> parameters,
                                                           @Nullable T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders(userId));
@@ -88,9 +99,11 @@ public class BaseClient {
         ResponseEntity<Object> shareitServerResponse;
         try {
             if (parameters != null) {
-                shareitServerResponse = rest.exchange(path, method, requestEntity, Object.class, parameters);
+                shareitServerResponse = rest.exchange(path, method, requestEntity,
+                        Object.class, parameters);
             } else {
-                shareitServerResponse = rest.exchange(path, method, requestEntity, Object.class);
+                shareitServerResponse = rest.exchange(path, method, requestEntity,
+                        Object.class);
             }
         } catch (HttpStatusCodeException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());

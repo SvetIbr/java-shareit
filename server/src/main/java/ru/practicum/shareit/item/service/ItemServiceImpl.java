@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.status.BookingStatus;
-import ru.practicum.shareit.error.exception.BadRequestException;
 import ru.practicum.shareit.error.exception.ItemNotFoundException;
 import ru.practicum.shareit.error.exception.NoAccessException;
 import ru.practicum.shareit.error.exception.UserNotFoundException;
@@ -49,8 +48,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
-        checkIdUserAndIdItemForNull(userId, itemId);
-
         checkUserInUserStorage(userId);
 
         Item itemToUpdate = repository.findById(itemId)
@@ -70,7 +67,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ItemDto getById(Long userId, Long itemId) {
-        checkIdUserAndIdItemForNull(userId, itemId);
         checkUserInUserStorage(userId);
 
         Item item = repository.findById(itemId)
@@ -95,14 +91,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemOwnerDto> getByOwner(Long userId, Integer from, Integer size) {
-        if (userId == null) {
-            throw new BadRequestException("Не указан идентификатор владельца");
-        }
         checkUserInUserStorage(userId);
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Параметры для отображения данных " +
-                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
-        }
 
         Page<Item> items = repository.findAllByOwnerIdOrderByIdAsc(userId,
                 PageRequest.of(from / size, size));
@@ -125,10 +114,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public List<ItemDto> search(Long userId, String text, Integer from, Integer size) {
         checkUserInUserStorage(userId);
-        if (from < 0 || size <= 0) {
-            throw new BadRequestException("Параметры для отображения данных " +
-                    "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)");
-        }
+
         if (text == null || text.isBlank() || text.isEmpty()) return new ArrayList<>();
         return repository.searchByTextOrderByIdDesc(text, PageRequest.of(from / size, size)).stream()
                 .map(ItemMapper::toItemDto).collect(Collectors.toList());
@@ -138,21 +124,6 @@ public class ItemServiceImpl implements ItemService {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(String.format("Пользователь " +
                     "с идентификатором %d не найден", userId));
-        }
-    }
-
-    private void checkIdUserAndIdItemForNull(Long userId, Long itemId) {
-        if (itemId == null) {
-            if (userId == null) {
-                throw new BadRequestException("Не указаны идентификаторы " +
-                        "пользователя и вещи для обновления информации");
-            } else {
-                throw new BadRequestException("Не указан идентификатор вещи для обновления информации");
-            }
-        } else {
-            if (userId == null) {
-                throw new BadRequestException("Не указан идентификатор пользователя");
-            }
         }
     }
 

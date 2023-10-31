@@ -12,6 +12,8 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
+import static ru.practicum.shareit.utils.Constants.HEADER_WITH_USER_ID;
+
 /**
  * Класс контроллера для работы с запросами к сервису вещей
  *
@@ -31,10 +33,6 @@ public class ItemController {
      * Поле сервис для работы с комментариями
      */
     private final CommentService commentService;
-    /**
-     * Поле образец заголовка запроса для указания  идентификатора пользователя
-     */
-    public static final String HEADER_WITH_OWNER_ID = "X-Sharer-User-Id";
 
     /**
      * Метод добавления вещи в хранилище сервиса через запрос
@@ -44,7 +42,7 @@ public class ItemController {
      * @return копию объекта itemDto с добавленным id и код ответа API 201
      */
     @PostMapping
-    public ItemDto create(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public ItemDto create(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                           @RequestBody ItemDto itemDto) {
         return new ResponseEntity<>(service.create(userId, itemDto), HttpStatus.CREATED).getBody();
     }
@@ -58,7 +56,7 @@ public class ItemController {
      * @return копию объекта itemDto с обновленными полями
      */
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public ItemDto update(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                           @RequestBody ItemDto itemDto,
                           @PathVariable Long itemId) {
         return service.update(userId, itemId, itemDto);
@@ -72,7 +70,7 @@ public class ItemController {
      * @return копию объекта itemDto с указанным идентификатором
      */
     @GetMapping("/{itemId}")
-    public ItemDto findById(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public ItemDto findById(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                             @PathVariable Long itemId) {
         return service.getById(userId, itemId);
     }
@@ -86,7 +84,7 @@ public class ItemController {
      * @return список объектов ItemOwnerDto
      */
     @GetMapping
-    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public List<ItemOwnerDto> findByOwner(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                           @RequestParam(required = false,
                                                   defaultValue = "0") Integer from,
                                           @RequestParam(required = false,
@@ -105,7 +103,7 @@ public class ItemController {
      * @return список вещей, доступных для аренды и содержащх в описании или названии text
      */
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestHeader(HEADER_WITH_OWNER_ID) long userId,
+    public List<ItemDto> search(@RequestHeader(HEADER_WITH_USER_ID) long userId,
                                 @RequestParam(value = "text") String text,
                                 @RequestParam(required = false, defaultValue = "0") Integer from,
                                 @RequestParam(required = false, defaultValue = "10") Integer size) {
@@ -121,7 +119,7 @@ public class ItemController {
      * @return CommentDto {@link CommentDto}
      */
     @PostMapping("/{itemId}/comment")
-    public CommentDto comment(@RequestHeader(HEADER_WITH_OWNER_ID) Long userId,
+    public CommentDto comment(@RequestHeader(HEADER_WITH_USER_ID) Long userId,
                               @PathVariable Long itemId,
                               @RequestBody CommentDto commentDto) {
         return commentService.addComment(userId, itemId, commentDto);

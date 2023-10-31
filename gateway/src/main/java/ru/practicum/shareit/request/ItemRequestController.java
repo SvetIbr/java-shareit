@@ -7,9 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.shareit.utils.Constants.HEADER_FOR_REQUEST;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -20,37 +21,33 @@ public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
     @PostMapping
-    public ResponseEntity<Object> createItemRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> createItemRequest(@RequestHeader(HEADER_FOR_REQUEST) Long userId,
                                                     @RequestBody @Valid ItemRequestDto itemRequestDto) {
-
-        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isBlank()) {
-            throw new ValidationException("Description has to be not empty");
-        }
 
         log.info("Create ItemRequest={}", itemRequestDto);
         return itemRequestClient.createItemRequest(userId, itemRequestDto);
     }
 
     @GetMapping()
-    public ResponseEntity<Object> getAllMyItemRequest(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getAllItemRequestByUser(@RequestHeader(HEADER_FOR_REQUEST) Long userId) {
         log.info("Get all own requests for user={}", userId);
-        return itemRequestClient.getAllOwnItemRequests(userId);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                     @PathVariable Long id) {
-        log.info("Get request with id={}", id);
-        return itemRequestClient.getItemRequest(userId, id);
+        return itemRequestClient.getAllItemRequestsByUser(userId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequestsForUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                        @PositiveOrZero @RequestParam(required = false,
-                                                                defaultValue = "0") Integer from,
-                                                        @Positive @RequestParam(required = false,
-                                                                defaultValue = "10") Integer size) {
+    public ResponseEntity<Object> getAllItemRequestsForUser(@RequestHeader(HEADER_FOR_REQUEST) Long userId,
+                                                            @PositiveOrZero @RequestParam(required = false,
+                                                                    defaultValue = "0") Integer from,
+                                                            @Positive @RequestParam(required = false,
+                                                                    defaultValue = "10") Integer size) {
         log.info("Get all user's requests for user={}", userId);
-        return itemRequestClient.getAllUserRequest(userId, from, size);
+        return itemRequestClient.getAllItemRequestForUser(userId, from, size);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getItemRequestById(@RequestHeader(HEADER_FOR_REQUEST) Long userId,
+                                                     @PathVariable Long id) {
+        log.info("Get request with id={}", id);
+        return itemRequestClient.getItemRequestById(userId, id);
     }
 }

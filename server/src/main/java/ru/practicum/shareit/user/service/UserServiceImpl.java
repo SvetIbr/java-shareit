@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.error.exception.BadRequestException;
 import ru.practicum.shareit.error.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -28,10 +27,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserDto update(Long id, UserDto userDto) {
-        if (id == null) {
-            throw new BadRequestException("Не указан идентификатор пользователя " +
-                    "для обновления информации");
-        }
         User userToUpdate = repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(String.format("Пользователь " +
                         "с идентификатором %d не найден", id)));
@@ -47,8 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserDto getById(Long id) {
-        checkUserInStorage(id);
-        User user = repository.findById(id).get();
+        User user = repository.findById(id).orElseThrow(() ->
+                new UserNotFoundException(String.format("Пользователь " +
+                        "с идентификатором %d не найден", id)));
         return UserMapper.toUserDto(user);
     }
 
@@ -60,14 +56,17 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void deleteById(Long id) {
-        checkUserInStorage(id);
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException(String.format("Пользователь " +
+                    "с идентификатором %d не найден", id));
+        }
         repository.deleteById(id);
     }
 
-    private void checkUserInStorage(Long userId) {
-        if (!repository.existsById(userId)) {
-            throw new UserNotFoundException(String.format("Пользователь " +
-                    "с идентификатором %d не найден", userId));
-        }
-    }
+//    private void checkUserInStorage(Long userId) {
+//        if (!repository.existsById(userId)) {
+//            throw new UserNotFoundException(String.format("Пользователь " +
+//                    "с идентификатором %d не найден", userId));
+//        }
+//    }
 }

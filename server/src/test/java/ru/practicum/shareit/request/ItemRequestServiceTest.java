@@ -76,23 +76,6 @@ public class ItemRequestServiceTest {
     }
 
     @Test
-    void getAllItemRequestWithNullUserIdTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemRequestService.getAllItemRequests(null, 0, 10));
-        assertEquals("Не указан идентификатор владельца",
-                exception.getMessage());
-    }
-
-    @Test
-    void getAllItemRequestsWithFailFromAndFailSizeTest() {
-        final BadRequestException exception = assertThrows(BadRequestException.class, ()
-                -> itemRequestService.getAllItemRequests(user.getId(), -1, -1));
-        assertEquals("Параметры для отображения данных " +
-                        "заданы не верно (начало не может быть меньше 0, а размер - меньше 1)",
-                exception.getMessage());
-    }
-
-    @Test
     void getItemRequestByIdTest() {
         assertEquals(itemRequestService.getItemRequestById(itemRequest.getId(),
                 user.getId()).getId(), ItemRequestMapper.toItemRequestDto(itemRequest, new ArrayList<>()).getId());
