@@ -3,7 +3,6 @@ package ru.practicum.shareit.request;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.error.exception.BadRequestException;
 import ru.practicum.shareit.error.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.error.exception.UserNotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;

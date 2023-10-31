@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.error.exception.BadRequestException;
 import ru.practicum.shareit.error.exception.ItemNotFoundException;
 import ru.practicum.shareit.error.exception.NoAccessException;
 import ru.practicum.shareit.error.exception.UserNotFoundException;
