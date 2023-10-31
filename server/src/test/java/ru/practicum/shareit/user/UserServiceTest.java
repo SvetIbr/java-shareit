@@ -44,6 +44,7 @@ public class UserServiceTest {
         assertEquals(userService.getById(newUser.getId()).getId(), user1.getId());
         assertEquals(userService.getById(newUser.getId()).getName(), user1.getName());
         assertEquals(userService.getById(newUser.getId()).getEmail(), user1.getEmail());
+        userRepository.deleteById(newUser.getId());
     }
 
     @Test
