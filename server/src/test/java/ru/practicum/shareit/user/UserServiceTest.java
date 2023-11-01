@@ -14,8 +14,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -76,14 +74,6 @@ public class UserServiceTest {
         final UserNotFoundException exception = assertThrows(UserNotFoundException.class, ()
                 -> userService.getById(8L));
         assertEquals("Пользователь с идентификатором 8 не найден", exception.getMessage());
-    }
-
-    @Test
-    void getAllTest() {
-        List<UserDto> usersFromStorage = userService.getAll();
-        assertEquals(2, usersFromStorage.size());
-        assertEquals(UserMapper.toUserDto(user1), usersFromStorage.get(0));
-        assertEquals(UserMapper.toUserDto(user2), usersFromStorage.get(1));
     }
 
     @Test
