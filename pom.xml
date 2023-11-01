@@ -41,6 +41,7 @@
 								<artifactId>lombok</artifactId>
 							</exclude>
 						</excludes>
+							<executable>true</executable>
 					</configuration>
 				</plugin>
 				<plugin>
