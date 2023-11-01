@@ -81,7 +81,9 @@ public class UserServiceTest {
     @Test
     void getAllTest() {
         List<UserDto> usersFromStorage = userService.getAll();
-        assertEquals(3, usersFromStorage.size());
+        assertEquals(2, usersFromStorage.size());
+        assertEquals(UserMapper.toUserDto(user1), usersFromStorage.get(0));
+        assertEquals(UserMapper.toUserDto(user2), usersFromStorage.get(1));
     }
 
     @Test

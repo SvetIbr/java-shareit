@@ -39,13 +39,14 @@ public class CommentServiceImpl implements CommentService {
         User author = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь " +
                         "с идентификатором %d не найден", userId)));
+
+        Comment comment = CommentMapper.toComment(commentDto, item, author, LocalDateTime.now());
         Booking booking = bookingRepository
                 .findTop1BookingByItemIdAndBookerIdAndEndIsBeforeAndStatusIsOrderByEndDesc(
                         itemId, userId, LocalDateTime.now(), BookingStatus.APPROVED)
                 .orElseThrow(() -> new BadRequestException("Не найдено информации " +
                         "о бронировании Вами данной вещи"));
 
-        Comment comment = CommentMapper.toComment(commentDto, item, author, LocalDateTime.now());
         comment = commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }
